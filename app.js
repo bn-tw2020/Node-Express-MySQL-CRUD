@@ -28,13 +28,57 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 app.get('/', (req,res)=>{
     let sql = "select * from users";
-    console.log('hahaha');
     let query = connection.query(sql,(err,rows)=>{ 
         if(err) throw err;
         res.render("user_index", {
             title: "CRUD operation using node, express, mysql",
             users : rows
         });
+    });
+});
+
+app.get('/add',(req,res)=>{
+    res.render("user_add", {
+        title: "CRUD operation using node, express, mysql",
+    });
+})
+
+app.post('/save',(req,res)=>{
+    let data = {name : req.body.name, email : req.body.email, phone_no : req.body.phone_no};
+    let sql = "insert into users SET ?";
+    let query = connection.query(sql, data,(err, results)=>{
+        if(err) throw err;
+        res.redirect('/');
+    });
+});
+
+app.get('/edit/:userid',(req,res)=>{
+    const userId = req.params.userid;
+    let sql = `select *from users where id=${userId}`;
+    let query = connection.query(sql, (err,result)=>{
+        if(err) throw err;
+        res.render('user_edit',{
+            title:'CRup Operation using nodejs express mysql',
+            user : result[0]
+        });
+    });
+});
+
+app.post('/update', (req, res) => {
+    const userId = req.body.id;
+    let sql = "update users SET name='" + req.body.name + "', email='" + req.body.email + "', phone_no='" + req.body.phone_no +"' where id="+userId;
+    let query = connection.query(sql, (err, results) => {
+        if (err) throw err;
+        res.redirect('/');
+    });
+});
+
+app.get('/delete/:userid', (req, res) => {
+    const userId = req.params.userid;
+    let sql = `DELETE from users where id=${userId}`;
+    let query = connection.query(sql, (err, result) => {
+        if (err) throw err;
+        res.redirect('/');
     });
 });
 
