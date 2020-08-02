@@ -8,7 +8,7 @@ const app = express();
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '80968096',
+    password: 'password', //본인 root계정 비밀번호작성
     database: 'node_crud'
 }); 
 
